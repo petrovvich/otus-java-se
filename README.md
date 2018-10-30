@@ -1,6 +1,6 @@
 # otus-java-se
 
-Студент:
+<h1>Студент:<h1>
 
-Александр Романюк <br>
-alexromantrue@gmail.com
+<h3>Александр Романюк</h3> <br>
+<h4>alexromantrue@gmail.com</h4>
