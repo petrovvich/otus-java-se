@@ -94,6 +94,7 @@
                         <lib>${java.home}/lib/jce.jar</lib>
                     </libs>
                     <injar>${project.name}-jar-with-dependencies.jar</injar>
+                    <outjar>${project.name}-obfuscated.jar</outjar>
                 </configuration>
             </plugin>
         </plugins>
