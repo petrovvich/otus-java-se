@@ -87,13 +87,13 @@
                     <proguardVersion>4.10</proguardVersion>
                     <options>
                         <option>-keep public class ru.petrovvich.study.Main{public static void main(java.lang.String[]);}</option>
+                        <option>-renamesourcefileattribute SourceFile</option>
                     </options>
                     <libs>
                         <lib>${java.home}/lib/rt.jar</lib>
                         <lib>${java.home}/lib/jce.jar</lib>
                     </libs>
                     <injar>${project.name}-jar-with-dependencies.jar</injar>
-                    <obfuscate>true</obfuscate>
                 </configuration>
             </plugin>
         </plugins>
