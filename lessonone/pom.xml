@@ -94,7 +94,6 @@
                     </libs>
                     <injar>${project.name}-jar-with-dependencies.jar</injar>
                     <obfuscate>true</obfuscate>
-                    <option>-dontnote org.apache.*</option>
                 </configuration>
             </plugin>
         </plugins>
