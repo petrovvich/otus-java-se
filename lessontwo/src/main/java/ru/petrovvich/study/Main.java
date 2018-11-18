@@ -12,7 +12,7 @@ public class Main {
     public static void main(String[] args) {
         String emptyString = "";
         String string = "Estimating Object Size Using Instrumentation";
-        String[] stringArray = { emptyString, string, "com.baeldung" };
+        String[] stringArray = { emptyString, string, "example for string array" };
         String[] anotherStringArray = new String[100];
         List<String> stringList = new ArrayList<>();
         StringBuilder stringBuilder = new StringBuilder(100);
