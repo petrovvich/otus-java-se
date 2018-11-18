@@ -51,6 +51,4 @@ public class Main {
         InstrumentationInitializer.getObjectSize(emptyClass);
         InstrumentationInitializer.getObjectSize(stringClass);
     }
-
-
 }

@@ -11,7 +11,10 @@ public class InstrumentationInitializer {
     }
 
     public static void getObjectSize(Object objectToMeasure) {
-
+        if (instrumentation == null) {
+            throw new IllegalStateException("To correctly start an app, please add VM option " +
+                    "-javaagent:\"{path_to_jar}/InstrumentationAgent.jar\"");
+        }
         Long size = instrumentation.getObjectSize(objectToMeasure);
 
         System.out.println("For object with type: " + objectToMeasure.getClass() + " size is: " + size + " bytes");
