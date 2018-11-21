@@ -1,8 +1,6 @@
 package ru.petrovvich.study;
 
 class Util {
-    private final static int ARRAY_SIZE = 30_000_000;
-
     static long getMem() {
         System.gc();
         try {
