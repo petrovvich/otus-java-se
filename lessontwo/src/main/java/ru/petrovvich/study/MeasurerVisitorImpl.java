@@ -2,7 +2,7 @@ package ru.petrovvich.study;
 
 import java.util.function.Supplier;
 
-import static ru.petrovvich.study.Measurer.getMem;
+import static ru.petrovvich.study.Util.getMem;
 
 public class MeasurerVisitorImpl implements MeasurerVisitor {
 
