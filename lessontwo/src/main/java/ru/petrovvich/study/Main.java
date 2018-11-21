@@ -1,54 +1,34 @@
 package ru.petrovvich.study;
 
-import java.util.ArrayList;
-import java.util.List;
-
-/**
- * To correctly start an app, please add VM option -javaagent:"{path_to_jar}/InstrumentationAgent.jar"
- */
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.TreeSet;
+import java.util.function.Supplier;
 
 public class Main {
 
     public static void main(String[] args) {
-        String emptyString = "";
-        String string = "Estimating Object Size Using Instrumentation";
-        String[] stringArray = { emptyString, string, "example for string array" };
-        String[] anotherStringArray = new String[100];
-        List<String> stringList = new ArrayList<>();
-        StringBuilder stringBuilder = new StringBuilder(100);
-        int maxIntPrimitive = Integer.MAX_VALUE;
-        int minIntPrimitive = Integer.MIN_VALUE;
-        Integer maxInteger = Integer.MAX_VALUE;
-        Integer minInteger = Integer.MIN_VALUE;
-        long zeroLong = 0L;
-        double zeroDouble = 0.0;
-        boolean falseBoolean = false;
-        Object object = new Object();
 
-        class EmptyClass {
-        }
-        EmptyClass emptyClass = new EmptyClass();
+        MeasurerVisitor measurerVisitor = new MeasurerVisitorImpl();
 
-        class StringClass {
-            public String s;
-        }
-        StringClass stringClass = new StringClass();
+        measurerVisitor.visit(1);
+        measurerVisitor.visit('1');
+        measurerVisitor.visit(1L);
+        measurerVisitor.visit(2.0);
+        measurerVisitor.visit(1.5f);
+        measurerVisitor.visit((short) 2);
+        measurerVisitor.visit((byte) 1.2);
+        measurerVisitor.visit(true);
 
-        InstrumentationInitializer.getObjectSize(emptyString);
-        InstrumentationInitializer.getObjectSize(string);
-        InstrumentationInitializer.getObjectSize(stringArray);
-        InstrumentationInitializer.getObjectSize(anotherStringArray);
-        InstrumentationInitializer.getObjectSize(stringList);
-        InstrumentationInitializer.getObjectSize(stringBuilder);
-        InstrumentationInitializer.getObjectSize(maxIntPrimitive);
-        InstrumentationInitializer.getObjectSize(minIntPrimitive);
-        InstrumentationInitializer.getObjectSize(maxInteger);
-        InstrumentationInitializer.getObjectSize(minInteger);
-        InstrumentationInitializer.getObjectSize(zeroLong);
-        InstrumentationInitializer.getObjectSize(zeroDouble);
-        InstrumentationInitializer.getObjectSize(falseBoolean);
-        InstrumentationInitializer.getObjectSize(object);
-        InstrumentationInitializer.getObjectSize(emptyClass);
-        InstrumentationInitializer.getObjectSize(stringClass);
+        System.out.println("String char: " + Measurer.measure(() -> new String(new char[0])));
+        System.out.println("String byte: " + Measurer.measure(() -> new String(new byte[0])));
+        System.out.println("Boolean object size is: " + Measurer.measure(() -> Boolean.FALSE));
+        //about 48 bytes
+        System.out.println("HashMap object size is: " + Measurer.measure((Supplier<HashMap>) HashMap::new));
+        //about 32 bytes
+        System.out.println("LinkedList object size is: " + Measurer.measure((Supplier<LinkedList>) LinkedList::new));
+        //about 64 bytes
+        System.out.println("TreeSet object size is: " + Measurer.measure((Supplier<TreeSet>) TreeSet::new));
+
     }
 }
