@@ -1,5 +1,7 @@
 package ru.petrovvich.study;
 
+import java.util.function.Supplier;
+
 import static ru.petrovvich.study.Measurer.getMem;
 
 public class MeasurerVisitorImpl implements MeasurerVisitor {
@@ -130,7 +132,17 @@ public class MeasurerVisitorImpl implements MeasurerVisitor {
     }
 
     @Override
-    public void visit(Object object) {
+    public <T> void visit(Supplier<T> objectGetter) {
+        Object[] array = new Object[ARRAY_SIZE];
+        long mem1 = getMem();
 
+        for (int i = 0; i < array.length; i++) {
+            array[i] = objectGetter.get();
+        }
+
+        long size = (getMem() - mem1) / array.length;
+        System.out.println("Element size: " + size + " len:" + array.length);
+
+        System.out.println("Measure Object: " + objectGetter.get().getClass().getName() + " with size: " + size);
     }
 }

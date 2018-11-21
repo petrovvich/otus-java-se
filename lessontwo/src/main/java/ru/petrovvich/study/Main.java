@@ -20,15 +20,16 @@ public class Main {
         measurerVisitor.visit((byte) 1.2);
         measurerVisitor.visit(true);
 
-        System.out.println("String char: " + Measurer.measure(() -> new String(new char[0])));
-        System.out.println("String byte: " + Measurer.measure(() -> new String(new byte[0])));
-        System.out.println("Boolean object size is: " + Measurer.measure(() -> Boolean.FALSE));
+        measurerVisitor.visit(() -> new String(new char[0]));
+
+        measurerVisitor.visit(() ->new String(new byte[0]));
+        measurerVisitor.visit(() ->Boolean.FALSE);
         //about 48 bytes
-        System.out.println("HashMap object size is: " + Measurer.measure((Supplier<HashMap>) HashMap::new));
+        measurerVisitor.visit(((Supplier<HashMap>) HashMap::new));
         //about 32 bytes
-        System.out.println("LinkedList object size is: " + Measurer.measure((Supplier<LinkedList>) LinkedList::new));
+        measurerVisitor.visit(((Supplier<LinkedList>) LinkedList::new));
         //about 64 bytes
-        System.out.println("TreeSet object size is: " + Measurer.measure((Supplier<TreeSet>) TreeSet::new));
+        measurerVisitor.visit(((Supplier<TreeSet>) TreeSet::new));
 
     }
 }

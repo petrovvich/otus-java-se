@@ -1,5 +1,7 @@
 package ru.petrovvich.study;
 
+import java.util.function.Supplier;
+
 public interface MeasurerVisitor {
 
     void visit(int i);
@@ -18,5 +20,5 @@ public interface MeasurerVisitor {
 
     void visit(float f);
 
-    void visit(Object object);
+    <T> void visit(Supplier<T> objectGetter);
 }
