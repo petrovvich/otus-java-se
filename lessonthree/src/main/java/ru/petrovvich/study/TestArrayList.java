@@ -8,27 +8,58 @@ import java.util.Objects;
 public class TestArrayList {
 
     public static void main(String[] args) {
+//        List<Integer> listInt = new ArrayList<>();
+//        listInt.add(1);
+//        listInt.add(2);
+//        listInt.add(3);
+//
+//        List<Integer> list = new ArrayList();
+//
+//        list.addAll(listInt);
+//
+//        List<Integer> secondListInt = new ArrayList<>();
+//        secondListInt.add(1);
+//        secondListInt.add(453);
+//        secondListInt.add(3);
+//        secondListInt.add(2);
+//
+//        Collections.copy(secondListInt, listInt);
+//
+//        MyArrayList<Integer> myArrayList = new MyArrayList<>();
+//        myArrayList.add(1);
+//
+//        myArrayList.addAll(list);
+//        Collections.copy(myArrayList, listInt);
         List<Integer> listInt = new ArrayList<>();
         listInt.add(1);
         listInt.add(2);
         listInt.add(3);
+        listInt.add(1);
+        listInt.add(2);
+        listInt.add(3);
+        listInt.add(1);
+        listInt.add(2);
+        listInt.add(3);
+        listInt.add(1);
+        listInt.add(2);
+        listInt.add(3);
 
-        List<Integer> list = new ArrayList();
-
-        list.addAll(listInt);
-
-        List<Integer> secondListInt = new ArrayList<>();
-        secondListInt.add(1);
-        secondListInt.add(453);
-        secondListInt.add(3);
-        secondListInt.add(2);
-
-        Collections.copy(secondListInt, listInt);
 
         MyArrayList<Integer> myArrayList = new MyArrayList<>();
         myArrayList.add(1);
+        myArrayList.add(1);
+        myArrayList.add(1);
+        myArrayList.add(1);
+        myArrayList.add(1);
+        myArrayList.add(1);
+        myArrayList.add(1);
+        myArrayList.add(1);
+        myArrayList.add(1);
+        myArrayList.add(1);
+        myArrayList.add(1);
+        myArrayList.add(1);
 
-        myArrayList.addAll(list);
+
         Collections.copy(myArrayList, listInt);
     }
 

@@ -1,6 +1,7 @@
 package ru.petrovvich.study;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 public class MyArrayList<E> implements List<E> {
 
@@ -8,6 +9,7 @@ public class MyArrayList<E> implements List<E> {
     private static final int DEFAULT_CAPACITY = 100;
     private Object[] elements;
     private int size;
+    protected transient int modCount = 0;
 
     public MyArrayList() {
         elements = EMPTY_LIST;
@@ -53,15 +55,14 @@ public class MyArrayList<E> implements List<E> {
         boolean result = false;
         int i = 0;
         while (i < size && !result) {
+            if (elements[i] == null) {
+                result = false;
+                continue;
+            }
             result = (o == null ? elements[i] == null : o.equals(elements[i]));
             i++;
         }
         return result;
-    }
-
-    @Override
-    public Iterator<E> iterator() {
-        return null;
     }
 
     @Override
@@ -87,7 +88,7 @@ public class MyArrayList<E> implements List<E> {
         return copy;
     }
 
-    @Override // переопределяем метод List
+    @Override
     public boolean add(E e) {
         if (size == elements.length) {
             increaseCapacity(size + DEFAULT_CAPACITY);
@@ -276,15 +277,149 @@ public class MyArrayList<E> implements List<E> {
         }
         return -1;
     }
+
     @Override
     public ListIterator<E> listIterator() {
-        return null;
+        return new ListItr(0);
     }
+
+    @Override
+    public Iterator<E> iterator() {
+        return listIterator();
+    }
+
     @Override
     public ListIterator<E> listIterator(int index) {
-        return null;
+        if (index < 0 || index > size)
+            throw new IndexOutOfBoundsException("Index: "+index);
+        return new ListItr(index);
     }
-    @Override
+
+    private class ListItr extends Itr implements ListIterator<E> {
+        ListItr(int index) {
+            super();
+            cursor = index;
+        }
+
+        public boolean hasPrevious() {
+            return cursor != 0;
+        }
+
+        public int nextIndex() {
+            return cursor;
+        }
+
+        public int previousIndex() {
+            return cursor - 1;
+        }
+
+        @SuppressWarnings("unchecked")
+        public E previous() {
+            checkForComodification();
+            int i = cursor - 1;
+            if (i < 0)
+                throw new NoSuchElementException();
+            Object[] elementData = MyArrayList.this.elements;
+            if (i >= elementData.length)
+                throw new ConcurrentModificationException();
+            cursor = i;
+            return (E) elementData[lastRet = i];
+        }
+
+        public void set(E e) {
+            if (lastRet < 0)
+                throw new IllegalStateException();
+            checkForComodification();
+
+            try {
+                MyArrayList.this.set(lastRet, e);
+            } catch (IndexOutOfBoundsException ex) {
+                throw new ConcurrentModificationException();
+            }
+        }
+
+        public void add(E e) {
+            checkForComodification();
+
+            try {
+                int i = cursor;
+                MyArrayList.this.add(i, e);
+                cursor = i + 1;
+                lastRet = -1;
+                expectedModCount = modCount;
+            } catch (IndexOutOfBoundsException ex) {
+                throw new ConcurrentModificationException();
+            }
+        }
+    }
+
+    private class Itr implements Iterator<E> {
+        int cursor;       // index of next element to return
+        int lastRet = -1; // index of last element returned; -1 if no such
+        int expectedModCount = modCount;
+
+        public boolean hasNext() {
+            return cursor != size;
+        }
+
+        @SuppressWarnings("unchecked")
+        public E next() {
+            checkForComodification();
+            int i = cursor;
+            if (i >= size)
+                throw new NoSuchElementException();
+            Object[] elementData = MyArrayList.this.elements;
+            if (i >= elementData.length)
+                throw new ConcurrentModificationException();
+            cursor = i + 1;
+            return (E) elementData[lastRet = i];
+        }
+
+        public void remove() {
+            if (lastRet < 0)
+                throw new IllegalStateException();
+            checkForComodification();
+
+            try {
+                MyArrayList.this.remove(lastRet);
+                cursor = lastRet;
+                lastRet = -1;
+                expectedModCount = modCount;
+            } catch (IndexOutOfBoundsException ex) {
+                throw new ConcurrentModificationException();
+            }
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public void forEachRemaining(Consumer<? super E> consumer) {
+            Objects.requireNonNull(consumer);
+            final int size = MyArrayList.this.size;
+            int i = cursor;
+            if (i >= size) {
+                return;
+            }
+            final Object[] elementData = MyArrayList.this.elements;
+            if (i >= elementData.length) {
+                throw new ConcurrentModificationException();
+            }
+            while (i != size && modCount == expectedModCount) {
+                consumer.accept((E) elementData[i++]);
+            }
+            // update once at end of iteration to reduce heap write traffic
+            cursor = i;
+            lastRet = i - 1;
+            checkForComodification();
+        }
+
+        final void checkForComodification() {
+            if (modCount != expectedModCount)
+                throw new ConcurrentModificationException();
+        }
+    }
+
+
+        @Override
     public List<E> subList(int fromIndex, int toIndex) {
         return null;
     }
