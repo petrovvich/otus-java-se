@@ -14,18 +14,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TestRunner {
-
-    public TestRunner() {
-    }
 
     /**
      * Another package-name test runner. Search classes in package and delegate their to base runner.
      *
      * @param packageName with test class, ex. <b>java.lang<b/>
-     * @throws IOException
-     * @throws ClassNotFoundException
      */
     public static void initByPackageName(String packageName) {
         List<Class> classes = Arrays.asList(getClasses(packageName));
@@ -62,13 +58,7 @@ public class TestRunner {
             e.printStackTrace();
         }
 
-        Object o = null;
-        try {
-            assert classConstructor != null;
-            o = classConstructor.newInstance();
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
-        }
+        Object o = getTestClassObject(classConstructor);
 
         assert o != null;
         List<Method> allMethodList = Arrays.asList(o.getClass().getDeclaredMethods());
@@ -77,19 +67,29 @@ public class TestRunner {
             return;
         }
 
-        if (findByAnnotation(allMethodList, Before.class).size() <= 0
-                || findByAnnotation(allMethodList, Test.class).size() <= 0
-                || findByAnnotation(allMethodList, After.class).size() <= 0) {
+        if (findByAnnotation(allMethodList, Test.class).size() <= 0) {
             return;
         }
 
         List<Method> test = findByAnnotation(allMethodList, Test.class);
 
         for (Method m : test) {
+            o = getTestClassObject(classConstructor);
             runTestMethods(o, findByAnnotation(allMethodList, Before.class), Before.class);
             runSingleMethod(o, m);
             runTestMethods(o, findByAnnotation(allMethodList, After.class), After.class);
         }
+    }
+
+    private static Object getTestClassObject(Constructor<?> classConstructor) {
+        Object o = null;
+        try {
+            assert classConstructor != null;
+            o = classConstructor.newInstance();
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return o;
     }
 
     /**
@@ -133,13 +133,8 @@ public class TestRunner {
      * @return list of methods annotated by this annotation
      */
     private static List<Method> findByAnnotation(List<Method> methodList, Class annotationName) {
-        List<Method> result = new ArrayList<>();
-        for (Method m : methodList) {
-            if (checkMethodAnnotations(m, annotationName)) {
-                result.add(m);
-            }
-        }
-        return result;
+        return methodList.stream().filter(m -> checkMethodAnnotations(m, annotationName)).collect(Collectors.toList());
+
     }
 
     /**
