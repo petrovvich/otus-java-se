@@ -52,12 +52,12 @@ public class TestRunner {
 
         Constructor<?> classConstructor = null;
         try {
-            assert clazz != null;
             classConstructor = clazz.getConstructor();
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
 
+        assert classConstructor != null;
         Object o = getTestClassObject(classConstructor);
 
         assert o != null;
