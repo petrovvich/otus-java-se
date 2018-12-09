@@ -33,10 +33,26 @@ public class TestingClass {
     }
 
     @Test
-    public String testGetFirstName(){
+    public void testGetFirstName() {
         System.out.println("Running test");
         String firstName = "Danny";
 
-        return "Test result is: " + (firstName.equals(testEntity.getFirstName()) ? RESULT_OK : RESULT_FAIL);
+        firstName.equals(testEntity.getFirstName());
+    }
+
+    @Test
+    public void testGetLastName() {
+        System.out.println("Running test");
+        String firstName = "Krakovitz";
+
+        firstName.equals(testEntity.getLastName());
+    }
+
+    @Test
+    public void testGetMiddleName() {
+        System.out.println("Running test");
+        String firstName = "Second";
+
+        firstName.equals(testEntity.getMiddleName());
     }
 }
