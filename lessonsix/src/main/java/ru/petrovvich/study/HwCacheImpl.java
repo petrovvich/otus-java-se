@@ -4,17 +4,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.ref.SoftReference;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class HwCacheImpl<K, V> implements HwCache<K, V> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HwCacheImpl.class);
 
     private int capacity = 0;
-    private final Map<K, SoftReference<CacheElement<K, V>>> cacheElements = new HashMap<>();
+    private final Map<K, SoftReference<CacheElement<K, V>>> cacheElements = new LinkedHashMap<>();
     private List<HwListener<K, V>> listeners = new ArrayList<>();
 
     public HwCacheImpl() {
@@ -50,8 +47,9 @@ public class HwCacheImpl<K, V> implements HwCache<K, V> {
         if (cashingReference != null) {
             LOGGER.info("Success remove element with key: {}", key);
             cacheElements.remove(key);
+        } else {
+            LOGGER.error("Element with key {} not found in cache.", key);
         }
-        LOGGER.error("Element with key {} not found in cache.", key);
     }
 
     @Override
@@ -84,7 +82,8 @@ public class HwCacheImpl<K, V> implements HwCache<K, V> {
         if (listeners.contains(listener)) {
             LOGGER.info("Trying to delete listener: {}", listener);
             listeners.remove(listener);
+        } else {
+            LOGGER.error("Listener {} not found in list.", listener);
         }
-        LOGGER.error("Listener {} not found in list.", listener);
     }
 }
