@@ -34,6 +34,10 @@ public class HwCacheImpl<K, V> implements HwCache<K, V> {
         }
         K elementKey = cashingElement.getKey();
         cacheElements.put(elementKey, new SoftReference<>(cashingElement));
+
+        if (hasListeners()) {
+            listeners.forEach(l -> notify());
+        }
     }
 
     @Override
@@ -47,6 +51,9 @@ public class HwCacheImpl<K, V> implements HwCache<K, V> {
         if (cashingReference != null) {
             LOGGER.info("Success remove element with key: {}", key);
             cacheElements.remove(key);
+            if (hasListeners()) {
+                listeners.forEach(l -> notify());
+            }
         } else {
             LOGGER.error("Element with key {} not found in cache.", key);
         }
@@ -60,6 +67,9 @@ public class HwCacheImpl<K, V> implements HwCache<K, V> {
         CacheElement<K, V> element = softRef != null ? softRef.get() : null;
         LOGGER.debug("Found element: {}", element);
         if (element != null) {
+            if (hasListeners()) {
+                listeners.forEach(l -> notify());
+            }
             return element.getValue();
         } else {
             LOGGER.error("Key not found: {}", key);
@@ -85,5 +95,9 @@ public class HwCacheImpl<K, V> implements HwCache<K, V> {
         } else {
             LOGGER.error("Listener {} not found in list.", listener);
         }
+    }
+
+    private boolean hasListeners() {
+        return listeners.isEmpty();
     }
 }
