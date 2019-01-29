@@ -4,7 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.ref.SoftReference;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class HwCacheImpl<K, V> implements HwCache<K, V> {
 
@@ -35,9 +38,7 @@ public class HwCacheImpl<K, V> implements HwCache<K, V> {
         K elementKey = cashingElement.getKey();
         cacheElements.put(elementKey, new SoftReference<>(cashingElement));
 
-        if (hasListeners()) {
-            listeners.forEach(l -> notify());
-        }
+        notifyListeners(cashingElement, "put");
     }
 
     @Override
@@ -51,9 +52,7 @@ public class HwCacheImpl<K, V> implements HwCache<K, V> {
         if (cashingReference != null) {
             LOGGER.info("Success remove element with key: {}", key);
             cacheElements.remove(key);
-            if (hasListeners()) {
-                listeners.forEach(l -> notify());
-            }
+            notifyListeners(cashingReference.get(), "remove");
         } else {
             LOGGER.error("Element with key {} not found in cache.", key);
         }
@@ -67,9 +66,7 @@ public class HwCacheImpl<K, V> implements HwCache<K, V> {
         CacheElement<K, V> element = softRef != null ? softRef.get() : null;
         LOGGER.debug("Found element: {}", element);
         if (element != null) {
-            if (hasListeners()) {
-                listeners.forEach(l -> notify());
-            }
+            notifyListeners(element, "get");
             return element.getValue();
         } else {
             LOGGER.error("Key not found: {}", key);
@@ -97,7 +94,12 @@ public class HwCacheImpl<K, V> implements HwCache<K, V> {
         }
     }
 
-    private boolean hasListeners() {
-        return listeners.isEmpty();
+    private void notifyListeners(CacheElement<K, V> element, String action) {
+        if (!listeners.isEmpty()) {
+            listeners.forEach(l -> l.notify(element.getKey(), element.getValue(), action));
+            LOGGER.info("Notify listener action with key: " + element.getKey() +
+                    ", value: " + element.getValue() +
+                    ", action: " + action);
+        }
     }
 }
