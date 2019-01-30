@@ -1,9 +1,13 @@
 package ru.petrovvich.study.model.enums;
 
+/**
+ * Справочник валют, возможных к выдаче в банкомате
+ */
 public enum Currency {
 
     RUR("Российский рубль"),
-    USD("Доллар США");
+    USD("Доллар США"),
+    EUR("Евро");
 
     Currency(String description) {
         this.description = description;
