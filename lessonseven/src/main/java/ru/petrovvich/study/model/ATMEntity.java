@@ -31,7 +31,8 @@ public class ATMEntity {
     private Collection<Banknote> generateBanknotes(Denomination denomination) {
         List<Banknote> result = new ArrayList<>();
 
+        result.add(4);
 
-        return null;
+        return result;
     }
 }

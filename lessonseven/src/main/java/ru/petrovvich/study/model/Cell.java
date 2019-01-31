@@ -14,10 +14,12 @@ public class Cell {
 
     private Collection<Banknote> banknotes;
     private Denomination denomination;
+    private Integer capacity;
 
     public Cell(Collection<Banknote> banknotes, Denomination denomination) {
         this.banknotes = banknotes;
         this.denomination = denomination;
+        this.capacity = banknotes.size();
     }
 
     public int getCapacity() {
@@ -40,11 +42,16 @@ public class Cell {
         this.denomination = denomination;
     }
 
+    public void setCapacity(Integer capacity) {
+        this.capacity = capacity;
+    }
+
     @Override
     public String toString() {
         return new StringJoiner(", ", Cell.class.getSimpleName() + "[", "]")
                 .add("banknotes=" + banknotes)
                 .add("denomination=" + denomination)
+                .add("capacity=" + capacity)
                 .add(UUID.randomUUID().toString())
                 .toString();
     }
