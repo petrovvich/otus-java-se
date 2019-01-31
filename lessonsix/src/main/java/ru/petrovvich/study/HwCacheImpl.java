@@ -97,10 +97,7 @@ public class HwCacheImpl<K, V> implements HwCache<K, V> {
     private void notifyListeners(CacheElement<K, V> element, String action) {
         if (!listeners.isEmpty()) {
             try {
-                listeners.forEach(l -> {
-                    // l.notify(element.getKey(), element.getValue(), action);
-                    notify();
-                });
+                listeners.forEach(l -> l.notify(element.getKey(), element.getValue(), action));
                 LOGGER.info("Notify listener action with key: " + element.getKey() +
                         ", value: " + element.getValue() +
                         ", action: " + action);
