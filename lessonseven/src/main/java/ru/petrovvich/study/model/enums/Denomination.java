@@ -5,18 +5,24 @@ package ru.petrovvich.study.model.enums;
  */
 public enum Denomination {
 
-    ONE_HUNDRED("Сто"),
-    TWO_HUNDRED("Двести"),
-    FIVE_HUNDRED("Пятьсот"),
-    ONE_THOUSAND("Тысяча"),
-    TWO_THOUSAND("Две тысячи"),
-    FIVE_THOUSAND("Пять тысяч");
+    ONE_HUNDRED(100, "сто"),
+    TWO_HUNDRED(200, "двести"),
+    FIVE_HUNDRED(500, "триста"),
+    ONE_THOUSAND(1000, "тысяча"),
+    TWO_THOUSAND(2000, "две тысячи"),
+    FIVE_THOUSAND(5000, "пять тысяч");
 
-    Denomination(String description) {
+    Denomination(Integer nominal, String description) {
+        this.nominal = nominal;
         this.description = description;
     }
 
+    private Integer nominal;
     private String description;
+
+    public Integer getNominal() {
+        return nominal;
+    }
 
     public String getDescription() {
         return description;

@@ -2,7 +2,9 @@ package ru.petrovvich.study.model;
 
 import ru.petrovvich.study.model.enums.Denomination;
 
-import java.util.Collection;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.StringJoiner;
 import java.util.UUID;
 
@@ -12,25 +14,21 @@ import java.util.UUID;
  */
 public class Cell {
 
-    private Collection<Banknote> banknotes;
+    private List<Banknote> banknotes;
     private Denomination denomination;
     private Integer capacity;
 
-    public Cell(Collection<Banknote> banknotes, Denomination denomination) {
+    public Cell(List<Banknote> banknotes, Denomination denomination) {
         this.banknotes = banknotes;
         this.denomination = denomination;
         this.capacity = banknotes.size();
     }
 
-    public int getCapacity() {
-        return banknotes.isEmpty() ? 0 : banknotes.size();
-    }
-
-    public Collection<Banknote> getBanknotes() {
+    public List<Banknote> getBanknotes() {
         return banknotes;
     }
 
-    public void setBanknotes(Collection<Banknote> banknotes) {
+    public void setBanknotes(List<Banknote> banknotes) {
         this.banknotes = banknotes;
     }
 
@@ -42,8 +40,30 @@ public class Cell {
         this.denomination = denomination;
     }
 
+    public int getCapacity() {
+        return banknotes.isEmpty() ? 0 : banknotes.size();
+    }
+
     public void setCapacity(Integer capacity) {
         this.capacity = capacity;
+    }
+
+    public boolean addBanknotes(int countToAdd, Denomination denomination) {
+        if (banknotes.size() + countToAdd >= capacity) {
+            return false;
+        }
+        for (int i = 0; i < countToAdd; i++) {
+            banknotes.add(new Banknote(denomination));
+        }
+        return true;
+    }
+
+    public boolean getBanknotes(int countToGet) {
+        if (countToGet > banknotes.size()) {
+            return false;
+        }
+        banknotes = banknotes.subList(0, countToGet);
+        return true;
     }
 
     @Override
