@@ -1,6 +1,7 @@
 package ru.petrovvich.study.model;
 
 import ru.petrovvich.study.exception.EmptyCellException;
+import ru.petrovvich.study.model.enums.ATMResponse;
 import ru.petrovvich.study.model.enums.Denomination;
 
 import java.util.*;
@@ -63,12 +64,12 @@ public class ATMEntity {
 
 
 
-    public boolean getCash(Long summ) {
+    public ATMResponse getCash(Long summ) {
         if (summ > getTotalBalanceInUnits()) {
-            return false;
+            return ATMResponse.NOT_ENOUGH_BALANCE;
         }
 
-        return true;
+        return ATMResponse.OK;
     }
 
     public void putCash() {

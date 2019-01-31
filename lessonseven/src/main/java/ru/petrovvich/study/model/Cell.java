@@ -1,9 +1,8 @@
 package ru.petrovvich.study.model;
 
+import ru.petrovvich.study.model.enums.ATMResponse;
 import ru.petrovvich.study.model.enums.Denomination;
 
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
 import java.util.UUID;
@@ -48,22 +47,22 @@ public class Cell {
         this.capacity = capacity;
     }
 
-    public boolean addBanknotes(int countToAdd, Denomination denomination) {
+    public ATMResponse addBanknotes(int countToAdd, Denomination denomination) {
         if (banknotes.size() + countToAdd >= capacity) {
-            return false;
+            return ATMResponse.TOO_MANY_BANKNOTES;
         }
         for (int i = 0; i < countToAdd; i++) {
             banknotes.add(new Banknote(denomination));
         }
-        return true;
+        return ATMResponse.OK;
     }
 
-    public boolean getBanknotes(int countToGet) {
+    public ATMResponse getBanknotes(int countToGet) {
         if (countToGet > banknotes.size()) {
-            return false;
+            return ATMResponse.NOT_ENOUGH_BANKNOTES;
         }
         banknotes = banknotes.subList(0, countToGet);
-        return true;
+        return ATMResponse.OK;
     }
 
     @Override
