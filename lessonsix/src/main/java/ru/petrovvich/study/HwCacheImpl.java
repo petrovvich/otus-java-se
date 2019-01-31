@@ -20,12 +20,8 @@ public class HwCacheImpl<K, V> implements HwCache<K, V> {
     public HwCacheImpl() {
     }
 
-    public HwCacheImpl(int capacity) {
-        this.capacity = capacity;
-    }
-
     @Override
-    public synchronized void put(K key, V value) {
+    public void put(K key, V value) {
         LOGGER.info("Adding element into cash with params: key {}, value {}", key, value);
 
         CacheElement<K, V> cashingElement = new CacheElement<>(key, value);
@@ -42,7 +38,7 @@ public class HwCacheImpl<K, V> implements HwCache<K, V> {
     }
 
     @Override
-    public synchronized void remove(K key) {
+    public void remove(K key) {
         LOGGER.info("Removing element with key: {}", key);
         if (cacheElements.isEmpty()) {
             LOGGER.error("Cache is empty! Add something then try remove it.");
@@ -59,7 +55,7 @@ public class HwCacheImpl<K, V> implements HwCache<K, V> {
     }
 
     @Override
-    public synchronized V get(K key) {
+    public V get(K key) {
         LOGGER.info("Getting element with key: {}", key);
         SoftReference<CacheElement<K, V>> softRef = cacheElements.get(key);
 
