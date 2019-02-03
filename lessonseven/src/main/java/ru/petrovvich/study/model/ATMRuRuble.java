@@ -66,6 +66,9 @@ public class ATMRuRuble implements ATM {
         for (Integer i : balances.descendingKeySet()) {
             if (i <= summ) {
                 int count = summ / i;
+                if (count == 0) {
+                    continue;
+                }
                 summ -= count * i;
                 Cell cell = getCellByNominal(i);
                 response = cell.getBanknotes(count);
@@ -102,6 +105,9 @@ public class ATMRuRuble implements ATM {
             Cell cell = getCellByNominal(i);
             if (i <= sum) {
                 int count = sum / i;
+                if (count == 0) {
+                    continue;
+                }
                 sum -= count * i;
 
                 response = cell.addBanknotes(count);
