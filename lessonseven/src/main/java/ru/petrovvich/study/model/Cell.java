@@ -1,9 +1,9 @@
 package ru.petrovvich.study.model;
 
 import ru.petrovvich.study.model.enums.ATMResponse;
+import ru.petrovvich.study.model.enums.Currency;
 import ru.petrovvich.study.model.enums.Denomination;
 
-import java.util.List;
 import java.util.StringJoiner;
 import java.util.UUID;
 
@@ -13,22 +13,16 @@ import java.util.UUID;
  */
 public class Cell {
 
-    private List<Banknote> banknotes;
     private Denomination denomination;
     private Integer capacity;
+    private Integer balance;
+    private Integer currentCapacity;
 
-    public Cell(List<Banknote> banknotes, Denomination denomination) {
-        this.banknotes = banknotes;
+    public Cell(Denomination denomination, int capacity) {
         this.denomination = denomination;
-        this.capacity = banknotes.size();
-    }
-
-    public List<Banknote> getBanknotes() {
-        return banknotes;
-    }
-
-    public void setBanknotes(List<Banknote> banknotes) {
-        this.banknotes = banknotes;
+        this.capacity = capacity;
+        this.currentCapacity = capacity;
+        this.balance = capacity * denomination.getNominal();
     }
 
     public Denomination getDenomination() {
@@ -40,37 +34,47 @@ public class Cell {
     }
 
     public int getCapacity() {
-        return banknotes.isEmpty() ? 0 : banknotes.size();
+        return capacity;
     }
 
     public void setCapacity(Integer capacity) {
         this.capacity = capacity;
     }
 
-    public ATMResponse addBanknotes(int countToAdd, Denomination denomination) {
-        if (banknotes.size() + countToAdd >= capacity) {
+    public int getBalance() {
+        return balance;
+    }
+
+    public void setBalance(int balance) {
+        this.balance = balance;
+    }
+
+    public ATMResponse addBanknotes(int countToAdd) {
+        if (currentCapacity + countToAdd >= capacity) {
             return ATMResponse.TOO_MANY_BANKNOTES;
         }
-        for (int i = 0; i < countToAdd; i++) {
-            banknotes.add(new Banknote(denomination));
-        }
+        currentCapacity += countToAdd;
+        balance += (denomination.getNominal() * countToAdd);
+
         return ATMResponse.OK;
     }
 
     public ATMResponse getBanknotes(int countToGet) {
-        if (countToGet > banknotes.size()) {
+        if (countToGet > currentCapacity) {
             return ATMResponse.NOT_ENOUGH_BANKNOTES;
         }
-        banknotes = banknotes.subList(0, countToGet);
+        currentCapacity -= countToGet;
+        balance -= (denomination.getNominal() * countToGet);
+
         return ATMResponse.OK;
     }
 
     @Override
     public String toString() {
         return new StringJoiner(", ", Cell.class.getSimpleName() + "[", "]")
-                .add("banknotes=" + banknotes)
                 .add("denomination=" + denomination)
                 .add("capacity=" + capacity)
+                .add("balance=" + balance)
                 .add(UUID.randomUUID().toString())
                 .toString();
     }

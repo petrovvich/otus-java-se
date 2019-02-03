@@ -5,7 +5,9 @@ public enum ATMResponse {
     OK("Операция проведена успешно"),
     TOO_MANY_BANKNOTES("Недостаточно места для банкнот указанного номинала для проведения операции"),
     NOT_ENOUGH_BANKNOTES("Недостаточно банкнот указанного номинала для проведения операции"),
-    NOT_ENOUGH_BALANCE("Недостаточно средств для проведения операции");
+    NOT_ENOUGH_BALANCE("Недостаточно средств для проведения операции"),
+    INVALID_SUM("Введена неправильная сумма"),
+    ERROR("Произошла ошибка, смотри лог");
 
     ATMResponse(String description) {
         this.description = description;
