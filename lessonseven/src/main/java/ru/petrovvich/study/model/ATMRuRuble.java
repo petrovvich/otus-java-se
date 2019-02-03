@@ -7,7 +7,6 @@ import ru.petrovvich.study.model.enums.Denomination;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Базовая сущность банкомата.
@@ -67,6 +66,9 @@ public class ATMRuRuble implements ATM {
         for (Integer i : balances.descendingKeySet()) {
             if (i <= summ) {
                 int count = summ / i;
+                if (count == 0) {
+                    continue;
+                }
                 summ -= count * i;
                 Cell cell = getCellByNominal(i);
                 response = cell.getBanknotes(count);
@@ -103,6 +105,9 @@ public class ATMRuRuble implements ATM {
             Cell cell = getCellByNominal(i);
             if (i <= sum) {
                 int count = sum / i;
+                if (count == 0) {
+                    continue;
+                }
                 sum -= count * i;
 
                 response = cell.addBanknotes(count);
