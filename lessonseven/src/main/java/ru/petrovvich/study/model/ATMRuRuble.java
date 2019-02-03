@@ -4,9 +4,10 @@ import ru.petrovvich.study.model.enums.ATMResponse;
 import ru.petrovvich.study.model.enums.Currency;
 import ru.petrovvich.study.model.enums.Denomination;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Базовая сущность банкомата.
@@ -15,7 +16,7 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class ATMRuRuble implements ATM {
 
-    private List<Cell> cells;
+    private List<Cell> cells = new ArrayList<>();
     private Currency currency = Currency.RUR;
 
     public List<Cell> getCells() {
@@ -52,6 +53,7 @@ public class ATMRuRuble implements ATM {
 
     /**
      * Метод для получения денег из банкомата
+     *
      * @param summ сумма для получения
      * @return результат операции
      */
@@ -90,6 +92,7 @@ public class ATMRuRuble implements ATM {
 
     /**
      * Метод для внесения средств в банкомат
+     *
      * @param sum сумма для внесения
      * @return результат выполнения операции
      */
@@ -104,7 +107,7 @@ public class ATMRuRuble implements ATM {
 
                 response = cell.addBanknotes(count);
                 if (!response.equals(ATMResponse.OK)) {
-                 return response;
+                    return response;
                 }
             }
             if (sum == 0) {
@@ -124,12 +127,13 @@ public class ATMRuRuble implements ATM {
      *
      * @return остаток в единицах валюты
      */
-    public Long getTotalBalanceInUnits() {
-        AtomicLong result = new AtomicLong(0L);
+    public Integer getTotalBalanceInUnits() {
+        int result = 0;
 
-        cells.forEach(cell -> result.updateAndGet(v -> v + (cell.getBalance() * cell.getDenomination().getNominal())));
-
-        return result.get();
+        for (Cell cell : cells) {
+            result += cell.getBalance();
+        }
+        return result;
     }
 
     /**

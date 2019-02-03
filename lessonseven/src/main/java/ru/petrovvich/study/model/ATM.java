@@ -14,5 +14,5 @@ public interface ATM {
 
     ATMResponse putCash(Integer sum);
 
-    Long getTotalBalanceInUnits();
+    Integer getTotalBalanceInUnits();
 }
