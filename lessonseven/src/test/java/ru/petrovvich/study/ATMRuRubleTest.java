@@ -13,7 +13,7 @@ public class ATMRuRubleTest {
     private int balance;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         this.atmRuRuble = new ATMRuRuble(Currency.RUR);
         this.balance = atmRuRuble.getTotalBalanceInUnits();
     }
@@ -30,13 +30,12 @@ public class ATMRuRubleTest {
     }
 
     @Test
-    public void testPut100Cash() {
-        Integer amountToGet = 100;
+    public void testPut100CashInFullATM() {
+        Assert.assertEquals(ATMResponse.TOO_MANY_BANKNOTES, atmRuRuble.putCash(100));
+    }
 
-        atmRuRuble.putCash(amountToGet);
-
-        int actualCash = atmRuRuble.getTotalBalanceInUnits();
-
-        Assert.assertEquals(ATMResponse.TOO_MANY_BANKNOTES, atmRuRuble.putCash(amountToGet));
+    @Test
+    public void testGetInvalidAmount() {
+        Assert.assertEquals(ATMResponse.INVALID_SUM, atmRuRuble.putCash(65));
     }
 }
