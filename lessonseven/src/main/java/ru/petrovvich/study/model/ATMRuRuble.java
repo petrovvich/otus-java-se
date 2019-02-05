@@ -16,7 +16,13 @@ import java.util.TreeMap;
 public class ATMRuRuble implements ATM {
 
     private List<Cell> cells = new ArrayList<>();
-    private Currency currency = Currency.RUR;
+
+    private Currency currency;
+
+    public ATMRuRuble(Currency currency) {
+        this.currency = currency;
+        onCreate();
+    }
 
     public List<Cell> getCells() {
         return cells;
@@ -26,9 +32,8 @@ public class ATMRuRuble implements ATM {
         this.cells = cells;
     }
 
-    public ATMRuRuble(Currency currency) {
-        this.currency = currency;
-        onCreate();
+    public boolean addCell(Cell cell) {
+        return this.cells.add(cell);
     }
 
     /**
