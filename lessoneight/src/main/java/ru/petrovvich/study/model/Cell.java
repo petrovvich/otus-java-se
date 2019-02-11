@@ -1,6 +1,7 @@
 package ru.petrovvich.study.model;
 
 import ru.petrovvich.study.model.enums.ATMResponse;
+import ru.petrovvich.study.model.enums.Currency;
 import ru.petrovvich.study.model.enums.Denomination;
 
 import java.util.StringJoiner;

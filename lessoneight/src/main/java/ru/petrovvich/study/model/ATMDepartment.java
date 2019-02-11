@@ -20,10 +20,6 @@ public class ATMDepartment {
         this.atms = atms;
     }
 
-    public boolean addATMToList(ATM atm) {
-        return this.atms.add(atm);
-    }
-
     /**
      * Метод возвращает к исходному состоянию все банкоматы
      */
@@ -50,6 +46,10 @@ public class ATMDepartment {
 
     public void setAtms(List<ATM> atms) {
         this.atms = atms;
+    }
+
+    public boolean addATMToList(ATM atm) {
+        return this.atms.add(atm);
     }
 
 

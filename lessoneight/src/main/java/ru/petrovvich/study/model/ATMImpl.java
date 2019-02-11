@@ -4,24 +4,26 @@ import ru.petrovvich.study.model.enums.ATMResponse;
 import ru.petrovvich.study.model.enums.Currency;
 import ru.petrovvich.study.model.enums.Denomination;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringJoiner;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * Базовая сущность банкомата.
  * Хранит в себе ячейки, заполненные банкнотами.
  * Одна ячейка не может содержать набор разного номинала банкнот.
  */
-public class ATMRuRuble implements ATM {
+public class ATMImpl implements ATM {
 
     private List<Cell> cells = new ArrayList<>();
     private Currency currency;
+    private Map<Denomination, Long> countOfCells;
+    private AtmImplCareTaker atmImplCareTaker;
 
-    public ATMRuRuble(Currency currency) {
+
+    public ATMImpl(Currency currency, Map<Denomination, Long> countOfCells) {
         this.currency = currency;
+        this.countOfCells = countOfCells;
         onCreate();
+        atmImplCareTaker.addMemento(new AtmImplMemento(currency, countOfCells));
     }
 
     public List<Cell> getCells() {
@@ -41,9 +43,7 @@ public class ATMRuRuble implements ATM {
      */
     @Override
     public void onCreate() {
-        for (Denomination d : Denomination.values()) {
-            createAndPutCell(d);
-        }
+        countOfCells.forEach(this::createAndPutCell);
     }
 
     /**
@@ -51,7 +51,9 @@ public class ATMRuRuble implements ATM {
      */
     @Override
     public void onReload() {
-        clearCells();
+        AtmImplMemento atmImplMemento = atmImplCareTaker.getMemento();
+        this.currency = atmImplMemento.getCurrency();
+        this.countOfCells = atmImplMemento.getCountOfCells();
         onCreate();
     }
 
@@ -170,9 +172,11 @@ public class ATMRuRuble implements ATM {
         return result;
     }
 
-    private void createAndPutCell(Denomination nominal) {
-        Cell cell = new Cell(nominal, DEFAULT_CAPACITY);
-        cells.add(cell);
+    private void createAndPutCell(Denomination nominal, Long count) {
+        for (int i = 0; i < count; i++) {
+            Cell cell = new Cell(nominal, DEFAULT_CAPACITY);
+            cells.add(cell);
+        }
     }
 
     private void clearCells() {
@@ -181,7 +185,7 @@ public class ATMRuRuble implements ATM {
 
     @Override
     public String toString() {
-        return new StringJoiner(", ", ATMRuRuble.class.getSimpleName() + "[", "]")
+        return new StringJoiner(", ", ATMImpl.class.getSimpleName() + "[", "]")
                 .add("cells=" + cells)
                 .add("currency=" + currency)
                 .toString();
