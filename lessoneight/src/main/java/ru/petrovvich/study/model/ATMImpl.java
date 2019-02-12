@@ -16,14 +16,12 @@ public class ATMImpl implements ATM {
     private List<Cell> cells = new ArrayList<>();
     private Currency currency;
     private Map<Denomination, Long> countOfCells;
-    private AtmImplCareTaker atmImplCareTaker;
 
 
     public ATMImpl(Currency currency, Map<Denomination, Long> countOfCells) {
         this.currency = currency;
         this.countOfCells = countOfCells;
         onCreate();
-        atmImplCareTaker.addMemento(new AtmImplMemento(currency, countOfCells));
     }
 
     public List<Cell> getCells() {
@@ -36,6 +34,14 @@ public class ATMImpl implements ATM {
 
     public boolean addCell(Cell cell) {
         return this.cells.add(cell);
+    }
+
+    public void setCurrency(Currency currency) {
+        this.currency = currency;
+    }
+
+    public void setCountOfCells(Map<Denomination, Long> countOfCells) {
+        this.countOfCells = countOfCells;
     }
 
     /**
@@ -51,9 +57,7 @@ public class ATMImpl implements ATM {
      */
     @Override
     public void onReload() {
-        AtmImplMemento atmImplMemento = atmImplCareTaker.getMemento();
-        this.currency = atmImplMemento.getCurrency();
-        this.countOfCells = atmImplMemento.getCountOfCells();
+        clearCells();
         onCreate();
     }
 
@@ -183,11 +187,45 @@ public class ATMImpl implements ATM {
         cells = null;
     }
 
+    public Memento getMemento() {
+        return new Memento(this.cells, this.currency, this.countOfCells);
+    }
+
     @Override
     public String toString() {
         return new StringJoiner(", ", ATMImpl.class.getSimpleName() + "[", "]")
                 .add("cells=" + cells)
                 .add("currency=" + currency)
                 .toString();
+    }
+
+    private class Memento {
+        private List<Cell> savedCells;
+        private Currency savedCurrency;
+        private Map<Denomination, Long> savedCountOfCells;
+
+        public Memento(List<Cell> cells, Currency currency, Map<Denomination, Long> countOfCells) {
+            this.savedCells = cells;
+            this.savedCurrency = currency;
+            this.savedCountOfCells = countOfCells;
+        }
+
+        public List<Cell> getSavedCells() {
+            return savedCells;
+        }
+
+        public Currency getSavedCurrency() {
+            return savedCurrency;
+        }
+
+        public Map<Denomination, Long> getCountOfCells() {
+            return countOfCells;
+        }
+
+        public void restore() {
+            setCells(savedCells);
+            setCurrency(savedCurrency);
+            setCountOfCells(savedCountOfCells);
+        }
     }
 }
