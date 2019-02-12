@@ -24,26 +24,6 @@ public class ATMImpl implements ATM {
         onCreate();
     }
 
-    public List<Cell> getCells() {
-        return cells;
-    }
-
-    public void setCells(List<Cell> cells) {
-        this.cells = cells;
-    }
-
-    public boolean addCell(Cell cell) {
-        return this.cells.add(cell);
-    }
-
-    public void setCurrency(Currency currency) {
-        this.currency = currency;
-    }
-
-    public void setCountOfCells(Map<Denomination, Long> countOfCells) {
-        this.countOfCells = countOfCells;
-    }
-
     /**
      * Метод наполняющий банкомат ячейками и купюрами всех номиналов при создании.
      */
@@ -191,6 +171,12 @@ public class ATMImpl implements ATM {
         return new Memento(this.cells, this.currency, this.countOfCells);
     }
 
+    public void restoreFrom(Memento memento) {
+        this.cells = memento.getSavedCells();
+        this.currency = memento.getSavedCurrency();
+        this.countOfCells = memento.getCountOfCells();
+    }
+
     @Override
     public String toString() {
         return new StringJoiner(", ", ATMImpl.class.getSimpleName() + "[", "]")
@@ -220,12 +206,6 @@ public class ATMImpl implements ATM {
 
         public Map<Denomination, Long> getCountOfCells() {
             return countOfCells;
-        }
-
-        public void restore() {
-            setCells(savedCells);
-            setCurrency(savedCurrency);
-            setCountOfCells(savedCountOfCells);
         }
     }
 }

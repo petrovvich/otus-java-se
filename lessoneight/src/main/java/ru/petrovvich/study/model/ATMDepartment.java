@@ -40,17 +40,4 @@ public class ATMDepartment {
         return result;
     }
 
-    public List<ATM> getAtms() {
-        return atms;
-    }
-
-    public void setAtms(List<ATM> atms) {
-        this.atms = atms;
-    }
-
-    public boolean addATMToList(ATM atm) {
-        return this.atms.add(atm);
-    }
-
-
 }
