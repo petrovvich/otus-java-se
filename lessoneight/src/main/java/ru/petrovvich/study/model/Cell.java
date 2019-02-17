@@ -29,24 +29,8 @@ public class Cell {
         return denomination;
     }
 
-    public void setDenomination(Denomination denomination) {
-        this.denomination = denomination;
-    }
-
-    public int getCapacity() {
-        return capacity;
-    }
-
-    public void setCapacity(Integer capacity) {
-        this.capacity = capacity;
-    }
-
     public int getBalance() {
         return balance;
-    }
-
-    public void setBalance(int balance) {
-        this.balance = balance;
     }
 
     public ATMResponse addBanknotes(int countToAdd) {
