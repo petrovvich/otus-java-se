@@ -1,6 +1,6 @@
 package writer;
 
-public enum  StringWrapper {
+public enum StringWrapper {
     QUOTES {
         @Override
         public String wrap(String string) {

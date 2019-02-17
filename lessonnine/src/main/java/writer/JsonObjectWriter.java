@@ -3,12 +3,15 @@ package writer;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class JsonObjectWriter {
+
     public static String toJson(Object object) {
-        String result = processObject(object);
-        return result;
+        return processObject(object);
     }
 
     private static String processObject(Object object) {
@@ -39,7 +42,7 @@ public class JsonObjectWriter {
                         + ":"
                         + getJsonElement(value));
 
-            } catch (IllegalAccessException e){
+            } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
         }
@@ -79,7 +82,7 @@ public class JsonObjectWriter {
         return processObject(object);
     }
 
-    public static boolean isPrimitiveType(Object object) {
+    private static boolean isPrimitiveType(Object object) {
         return (object instanceof Integer
                 || object instanceof Short
                 || object instanceof Long
@@ -89,21 +92,21 @@ public class JsonObjectWriter {
                 || object instanceof Boolean);
     }
 
-    public static boolean isArray(Object object) {
+    private static boolean isArray(Object object) {
         return object.getClass().isArray();
     }
 
-    public static boolean isIterable(Object object) {
+    private static boolean isIterable(Object object) {
         return (object instanceof Iterable);
     }
 
-    public static boolean isJSONArray(Object object){
+    private static boolean isJSONArray(Object object) {
         return isArray(object)
                 || isIterable(object)
                 || object instanceof Map;
     }
 
-    public static boolean isJSONValue(Object object){
+    private static boolean isJSONValue(Object object) {
         return isPrimitiveType(object)
                 || (object instanceof String)
                 || (object instanceof Character);
@@ -120,7 +123,7 @@ public class JsonObjectWriter {
         return StringWrapper.SQUARE_BRACKETS.wrap(String.join(",", elements));
     }
 
-    public static String getIterable(Object iterable) {
+    private static String getIterable(Object iterable) {
         if (iterable == null) {
             return StringWrapper.SQUARE_BRACKETS.wrap("");
         }
