@@ -16,12 +16,14 @@ public class ATMImpl implements ATM {
     private List<Cell> cells = new ArrayList<>();
     private Currency currency;
     private Map<Denomination, Long> countOfCells;
+    private final Memento memento;
 
 
     public ATMImpl(Currency currency, Map<Denomination, Long> countOfCells) {
         this.currency = currency;
         this.countOfCells = countOfCells;
         onCreate();
+        memento = new Memento(this.cells, this.currency, this.countOfCells);
     }
 
     /**
@@ -39,6 +41,21 @@ public class ATMImpl implements ATM {
     public void onReload() {
         clearCells();
         onCreate();
+    }
+
+    /**
+     * Метод для сброса состояния банкомата к начальному
+     * @return результат выполнения - true, если сброс прошел успешно или false если сбросить не удалось
+     */
+    @Override
+    public boolean onRestore() {
+        if (memento == null) {
+            return false;
+        }
+        this.countOfCells = memento.getSavedCountOfCells();
+        this.currency = memento.getSavedCurrency();
+        this.cells = memento.getSavedCells();
+        return true;
     }
 
     /**
@@ -174,7 +191,7 @@ public class ATMImpl implements ATM {
     public void restoreFrom(Memento memento) {
         this.cells = memento.getSavedCells();
         this.currency = memento.getSavedCurrency();
-        this.countOfCells = memento.getCountOfCells();
+        this.countOfCells = memento.getSavedCountOfCells();
     }
 
     @Override
@@ -186,9 +203,9 @@ public class ATMImpl implements ATM {
     }
 
     private class Memento {
-        private List<Cell> savedCells;
-        private Currency savedCurrency;
-        private Map<Denomination, Long> savedCountOfCells;
+        private final List<Cell> savedCells;
+        private final Currency savedCurrency;
+        private final Map<Denomination, Long> savedCountOfCells;
 
         public Memento(List<Cell> cells, Currency currency, Map<Denomination, Long> countOfCells) {
             this.savedCells = cells;
@@ -204,8 +221,8 @@ public class ATMImpl implements ATM {
             return savedCurrency;
         }
 
-        public Map<Denomination, Long> getCountOfCells() {
-            return countOfCells;
+        public Map<Denomination, Long> getSavedCountOfCells() {
+            return savedCountOfCells;
         }
     }
 }

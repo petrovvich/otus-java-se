@@ -10,6 +10,8 @@ public interface ATM {
 
     void onReload();
 
+    boolean onRestore();
+
     ATMResponse getCash(Integer summ);
 
     ATMResponse putCash(Integer sum);
