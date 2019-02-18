@@ -22,7 +22,6 @@ public class ATMImpl implements ATM {
     public ATMImpl(Currency currency, Map<Denomination, Long> countOfCells) {
         this.currency = currency;
         this.countOfCells = countOfCells;
-        onCreate();
         memento = new Memento(this.cells, this.currency, this.countOfCells);
     }
 
