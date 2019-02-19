@@ -12,27 +12,32 @@ import java.util.*;
 public class JsonObjectWriterTest {
 
     @Test
+    public void nullTest() {
+        Assert.assertEquals(new GsonBuilder().create().toJson(null), JsonObjectWriter.toJson(null));
+    }
+
+    @Test
     public void primitiveObjectTest() {
         PrimitiveObject input = getRandomPrimitiveObject();
-        Assert.assertEquals(JsonObjectWriter.toJson(input), new GsonBuilder().create().toJson(input));
+        Assert.assertEquals(new GsonBuilder().create().toJson(input), JsonObjectWriter.toJson(input));
     }
 
     @Test
     public void testComplexObject() {
         ComplexObject input = getComplexObject();
-        Assert.assertEquals(JsonObjectWriter.toJson(input), new GsonBuilder().create().toJson(input));
+        Assert.assertEquals(new GsonBuilder().create().toJson(input), JsonObjectWriter.toJson(input));
     }
 
     @Test
     public void testCollectionObject() {
         CollectionObject input = getCollectionObject();
-        Assert.assertEquals(JsonObjectWriter.toJson(input), new GsonBuilder().create().toJson(input));
+        Assert.assertEquals(new GsonBuilder().create().toJson(input), JsonObjectWriter.toJson(input));
     }
 
     @Test
     public void testArraysObject() {
         ArraysObject input = getArraysObject();
-        Assert.assertEquals(JsonObjectWriter.toJson(input), new GsonBuilder().create().toJson(input));
+        Assert.assertEquals(new GsonBuilder().create().toJson(input), JsonObjectWriter.toJson(input));
     }
 
     private PrimitiveObject getRandomPrimitiveObject() {

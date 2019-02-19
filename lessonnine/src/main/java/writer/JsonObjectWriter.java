@@ -11,6 +11,9 @@ import java.util.Set;
 public class JsonObjectWriter {
 
     public static String toJson(Object object) {
+        if (object == null) {
+            return String.valueOf(object);
+        }
         return processObject(object);
     }
 
