@@ -124,6 +124,8 @@ public class ExecutorImpl<T> implements Executor<T> {
     }
 
     private <T> boolean exists(T user) throws SQLException, IllegalAccessException {
-        return load((Long) getFieldByName(user, "id").get(user), user.getClass()) != null;
+        Field field= getFieldByName(user, "id");
+        field.setAccessible(true);
+        return load((Integer) field.get(user), user.getClass()) != null;
     }
 }
