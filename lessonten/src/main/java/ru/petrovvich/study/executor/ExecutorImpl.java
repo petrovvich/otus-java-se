@@ -108,7 +108,7 @@ public class ExecutorImpl<T> implements Executor<T> {
     private boolean checkClass(Class clazz) {
         boolean result = false;
 
-        List<Field> fields = Arrays.asList(clazz.getClass().getDeclaredFields());
+        List<Field> fields = Arrays.asList(clazz.getDeclaredFields());
 
         for (Field f : fields) {
             f.setAccessible(true);
