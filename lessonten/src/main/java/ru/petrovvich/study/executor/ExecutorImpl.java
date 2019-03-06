@@ -19,15 +19,8 @@ public class ExecutorImpl<T> implements Executor<T> {
     private static final String UPDATE_USER = "UPDATE User SET name = ?, age = ? WHERE id = ?";
     private static final String INSERT_USER = "INSERT INTO User (name, age) VALUES (?, ?)";
 
-    public ExecutorImpl(Connection connection) throws SQLException {
+    public ExecutorImpl(Connection connection) {
         this.connection = connection;
-        createTable();
-    }
-
-    private void createTable() throws SQLException {
-        try (PreparedStatement stmt = connection.prepareStatement("CREATE TABLE User (id INT, name VARCHAR(255), age int )")) {
-            stmt.executeUpdate();
-        }
     }
 
     @Override

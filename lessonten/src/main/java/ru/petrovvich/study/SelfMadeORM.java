@@ -14,7 +14,7 @@ public class SelfMadeORM {
             ExecutorImpl executor = new ExecutorImpl(connection);
 
             User user = new User();
-            user.setId(1);
+//            user.setId(1);
             user.setAge(12);
             user.setName("Viktor");
             executor.save(user);
