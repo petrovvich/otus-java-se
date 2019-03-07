@@ -10,6 +10,7 @@ import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -26,22 +27,31 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public long saveUsers(User user) throws SQLException {
+    public void saveUsers(User user) throws SQLException, IllegalAccessException {
         if (!checkClass(user.getClass())) {
             throw new SQLException("Class: " + user.getClass().getSimpleName() + " hasn't required id annotation");
         }
         try (Connection connection = connectionConfiguration.getConnection()) {
-            Executor<User> executor = new ExecutorImpl<>(connection);
-
-            executor.save(user);
+            ExecutorImpl<User> executor = new ExecutorImpl<>(connection);
+            if (exists(user, executor)) {
+                executor.update(getParams(user, new String[]{"name", "age", "id"}));
+            } else {
+                executor.save(getParams(user, new String[]{"name", "age"}));
+            }
         }
-
-        return 0;
     }
 
     @Override
     public Optional<User> getUser(long id) {
-        return Optional.empty();
+        User result = new User();
+        try (Connection connection = connectionConfiguration.getConnection()) {
+            ExecutorImpl<User> executor = new ExecutorImpl<>(connection);
+             result = executor.load(id, User.class);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return Optional.ofNullable(result);
     }
 
 
@@ -69,10 +79,23 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private <T> boolean exists(T user) throws SQLException, IllegalAccessException {
+    private <T> boolean exists(T user, Executor executor) throws SQLException, IllegalAccessException {
         Field field = getFieldByName(user, "id");
         field.setAccessible(true);
-        return load((Integer) field.get(user), user.getClass()) != null;
+        return executor.load((Integer) field.get(user), user.getClass()) != null;
     }
 
+    private List getParams(Object obj, String[] names) throws SQLException {
+        List params = new ArrayList();
+        try {
+            for (String name : names) {
+                Field field = getFieldByName(obj, name);
+                field.setAccessible(true);
+                params.add(field.get(obj));
+            }
+        } catch (Exception e) {
+            throw new SQLException(e);
+        }
+        return params;
+    }
 }

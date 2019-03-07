@@ -7,6 +7,6 @@ import java.util.Optional;
 
 public interface UserService {
 
-    long saveUsers(User user) throws SQLException;
+    void saveUsers(User user) throws SQLException, IllegalAccessException;
     Optional<User> getUser(long id);
 }
