@@ -3,14 +3,14 @@ package ru.petrovvich.study;
 import ru.petrovvich.study.model.PhoneDataSet;
 import ru.petrovvich.study.model.UserDataSet;
 import ru.petrovvich.study.service.DBService;
-import ru.petrovvich.study.service.DBServiceImpl;
+import ru.petrovvich.study.service.DBServiceHibernateImpl;
 
 import java.util.List;
 
 public class Main {
 
     public static void main(String[] args) {
-        DBService dbService = new DBServiceImpl();
+        DBService dbService = new DBServiceHibernateImpl();
 
         String status = dbService.getLocalStatus();
         System.out.println("Status: " + status);

@@ -12,13 +12,16 @@ public class UserDataSet extends DataSet {
     @OneToOne(cascade = CascadeType.ALL)
     private PhoneDataSet phone;
 
-    //Important for Hibernate
+    @OneToOne(cascade = CascadeType.ALL)
+    private AddressDataSet address;
+
     public UserDataSet() {
     }
 
-    public UserDataSet(String name, PhoneDataSet phone) {
+    public UserDataSet(String name, PhoneDataSet phone, AddressDataSet address) {
         this.setId(-1);
         this.name = name;
+        this.address = address;
         this.phone = phone;
     }
 

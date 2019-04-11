@@ -15,10 +15,10 @@ import ru.petrovvich.study.model.UserDataSet;
 import java.util.List;
 import java.util.function.Function;
 
-public class DBServiceImpl implements DBService {
+public class DBServiceHibernateImpl implements DBService {
     private final SessionFactory sessionFactory;
 
-    public DBServiceImpl() {
+    public DBServiceHibernateImpl() {
         Configuration configuration = new Configuration();
 
         configuration.addAnnotatedClass(UserDataSet.class);
@@ -43,7 +43,7 @@ public class DBServiceImpl implements DBService {
         sessionFactory = createSessionFactory(configuration);
     }
 
-    public DBServiceImpl(Configuration configuration) {
+    public DBServiceHibernateImpl(Configuration configuration) {
         sessionFactory = createSessionFactory(configuration);
     }
 
