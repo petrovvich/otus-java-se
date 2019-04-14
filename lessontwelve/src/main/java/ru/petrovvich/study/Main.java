@@ -13,7 +13,6 @@ public class Main {
 
     private final static int PORT = 8080;
     private final static String STATIC = "/static";
-    private final static String CSS = "/css";
 
     public static void main(String[] args) throws Exception {
         ResourceHandler resourceHandler = new ResourceHandler();

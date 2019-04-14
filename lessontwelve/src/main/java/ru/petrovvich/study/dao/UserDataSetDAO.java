@@ -33,6 +33,15 @@ public class UserDataSetDAO {
         return query.uniqueResult();
     }
 
+    public UserDataSet readByNameAndPassword(String name, String password) {
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<UserDataSet> criteria = builder.createQuery(UserDataSet.class);
+        Root<UserDataSet> from = criteria.from(UserDataSet.class);
+        criteria.where(builder.and(builder.equal(from.get("name"), name), builder.equal(from.get("password"), password)));
+        Query<UserDataSet> query = session.createQuery(criteria);
+        return query.uniqueResult();
+    }
+
     public List<UserDataSet> readAll() {
         CriteriaBuilder builder = session.getCriteriaBuilder();
         CriteriaQuery<UserDataSet> criteria = builder.createQuery(UserDataSet.class);

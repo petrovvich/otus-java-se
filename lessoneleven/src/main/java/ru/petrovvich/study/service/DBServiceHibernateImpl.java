@@ -92,6 +92,7 @@ public class DBServiceHibernateImpl implements DBService {
         } catch (Exception e) {
             logger.warn("Exception occured when runInSession {}", e.getLocalizedMessage());
             transaction.rollback();
+            return null;
         }
     }
 }

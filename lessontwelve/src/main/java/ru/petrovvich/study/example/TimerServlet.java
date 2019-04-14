@@ -1,5 +1,7 @@
 package ru.petrovvich.study.example;
 
+import ru.petrovvich.study.service.UserService;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -18,14 +20,14 @@ public class TimerServlet extends HttpServlet {
     private static final String TIMER_PAGE_TEMPLATE = "timer.html";
     private static final int PERIOD_MS = 1000;
 
+    private final UserService userService = new UserService();
+
     private final TemplateProcessor templateProcessor;
 
     public TimerServlet() {
         this.templateProcessor = new TemplateProcessor();
     }
 
-    //  Безопасный
-//  Идемпотентный
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Map<String, Object> pageVariables = new HashMap<>();
         pageVariables.put(REFRESH_VARIABLE_NAME, String.valueOf(PERIOD_MS));
@@ -36,22 +38,19 @@ public class TimerServlet extends HttpServlet {
         response.setStatus(HttpServletResponse.SC_OK);
     }
 
-    //  Не безопасный
-//  Не идемпотентный
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPost(req, resp);
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
+        resp.setContentType("text/html");
+        resp.setCharacterEncoding("UTF-8");
+
+
     }
 
-    //  Не безопасный
-//  Идемпотентный
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         super.doPut(req, resp);
     }
 
-    //  Не безопасный
-//  Идемпотентный
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         super.doDelete(req, resp);
