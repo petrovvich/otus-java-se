@@ -7,6 +7,8 @@ import org.hibernate.Transaction;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.petrovvich.study.dao.UserDataSetDAO;
 import ru.petrovvich.study.model.AddressDataSet;
 import ru.petrovvich.study.model.EmptyDataSet;
@@ -18,6 +20,7 @@ import java.util.function.Function;
 
 public class DBServiceHibernateImpl implements DBService {
     private final SessionFactory sessionFactory;
+    private static final Logger logger = LoggerFactory.getLogger(DBServiceHibernateImpl.class);
 
     public DBServiceHibernateImpl() {
         Configuration configuration = new Configuration();
@@ -48,10 +51,7 @@ public class DBServiceHibernateImpl implements DBService {
         try (Session session = sessionFactory.openSession()) {
             UserDataSetDAO dao = new UserDataSetDAO(session);
             dao.save(dataSet);
-            //session.save(dataSet);
-
             session.save(new EmptyDataSet());
-
         }
     }
 
@@ -83,11 +83,15 @@ public class DBServiceHibernateImpl implements DBService {
     }
 
     private <R> R runInSession(Function<Session, R> function) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        try {
             R result = function.apply(session);
             transaction.commit();
             return result;
+        } catch (Exception e) {
+            logger.warn("Exception occured when runInSession {}", e.getLocalizedMessage());
+            transaction.rollback();
         }
     }
 }
