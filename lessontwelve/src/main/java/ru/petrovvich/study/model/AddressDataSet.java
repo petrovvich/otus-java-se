@@ -1,10 +1,13 @@
 package ru.petrovvich.study.model;
 
+import lombok.Data;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.util.StringJoiner;
 
+@Data
 @Entity
 @Table(name = "address")
 public class AddressDataSet extends DataSet {

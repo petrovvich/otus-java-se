@@ -1,7 +1,11 @@
 package ru.petrovvich.study.model;
 
-import javax.persistence.*;
+import lombok.Data;
 
+import javax.persistence.*;
+import java.util.StringJoiner;
+
+@Data
 @Entity
 @Table(name = "user")
 public class UserDataSet extends DataSet {
@@ -15,14 +19,18 @@ public class UserDataSet extends DataSet {
     @OneToOne(cascade = CascadeType.ALL)
     private AddressDataSet address;
 
+    @Column
+    private String password;
+
     public UserDataSet() {
     }
 
-    public UserDataSet(String name, PhoneDataSet phone, AddressDataSet address) {
+    public UserDataSet(String name, String password, PhoneDataSet phone, AddressDataSet address) {
         this.setId(-1);
         this.name = name;
         this.address = address;
         this.phone = phone;
+        this.password = password;
     }
 
     public String getName() {
@@ -43,10 +51,11 @@ public class UserDataSet extends DataSet {
 
     @Override
     public String toString() {
-        return "UserDataSet{" +
-                "id'" + getId() + '\'' +
-                "name='" + name + '\'' +
-                ", phone=" + phone +
-                '}';
+        return new StringJoiner(", ", UserDataSet.class.getSimpleName() + "[", "]")
+                .add("name='" + name + "'")
+                .add("phone=" + phone)
+                .add("address=" + address)
+                .add("password='" + password + "'")
+                .toString();
     }
 }
