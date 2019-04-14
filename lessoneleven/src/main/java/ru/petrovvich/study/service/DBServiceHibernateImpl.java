@@ -8,6 +8,7 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 import ru.petrovvich.study.dao.UserDataSetDAO;
+import ru.petrovvich.study.model.AddressDataSet;
 import ru.petrovvich.study.model.EmptyDataSet;
 import ru.petrovvich.study.model.PhoneDataSet;
 import ru.petrovvich.study.model.UserDataSet;
@@ -24,22 +25,7 @@ public class DBServiceHibernateImpl implements DBService {
         configuration.addAnnotatedClass(UserDataSet.class);
         configuration.addAnnotatedClass(PhoneDataSet.class);
         configuration.addAnnotatedClass(EmptyDataSet.class);
-
-        configuration.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
-        configuration.setProperty("hibernate.connection.driver_class", "com.mysql.cj.jdbc.Driver");
-        configuration.setProperty("hibernate.connection.url", "jdbc:mysql://localhost:3306/dbexample");
-        configuration.setProperty("hibernate.connection.username", "root");
-        configuration.setProperty("hibernate.connection.password", "root");
-        configuration.setProperty("hibernate.show_sql", "true");
-        configuration.setProperty("hibernate.hbm2ddl.auto", "create");
-        configuration.setProperty("hibernate.connection.useSSL", "false");
-        configuration.setProperty("hibernate.connection.allowPublicKeyRetrieval", "true");
-        configuration.setProperty("hibernate.connection.useJDBCCompliantTimezoneShift", "true");
-        configuration.setProperty("hibernate.connection.useLegacyDatetimeCode", "false");
-        configuration.setProperty("hibernate.connection.serverTimezone", "UTC");
-
-        //configuration.setProperty("hibernate.enable_lazy_load_no_trans", "true");
-
+        configuration.addAnnotatedClass(AddressDataSet.class);
         sessionFactory = createSessionFactory(configuration);
     }
 
@@ -55,9 +41,7 @@ public class DBServiceHibernateImpl implements DBService {
     }
 
     public String getLocalStatus() {
-        return runInSession(session -> {
-            return session.getTransaction().getStatus().name();
-        });
+        return runInSession(session -> session.getTransaction().getStatus().name());
     }
 
     public void save(UserDataSet dataSet) {
