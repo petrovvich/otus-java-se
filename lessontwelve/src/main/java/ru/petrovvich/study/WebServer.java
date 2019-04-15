@@ -10,7 +10,7 @@ import ru.petrovvich.study.servlet.LoginServlet;
 import ru.petrovvich.study.servlet.RegisterServlet;
 import ru.petrovvich.study.servlet.UserHomeServlet;
 
-public class Main {
+public class WebServer {
 
     private final static int PORT = 8080;
     private final static String STATIC = "/static";

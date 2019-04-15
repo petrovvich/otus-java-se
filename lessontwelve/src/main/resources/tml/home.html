@@ -1,19 +1,91 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:c="http://www.w3.org/1999/XSL/Transform">
 <head>
     <meta charset="UTF-8">
-    <title>Домащняя страница</title>
+    <title>Домашняя страница</title>
 </head>
 <body>
-<h1>Информация о пользователе</h1>
+<a href="login">Назад</a>
+<h1>Информация о текущем пользователе</h1>
 <div>${login}</div>
 <br>
 <div>${phone}</div>
 <br>
 <div>Полный адрес: ${address}</div>
 <br>
-<form>
-<button >Удалить профиль</button>
-</form>
+<br>
+<div class="login-page">
+    <p>Добавить нового пользователя</p>
+    <div class="form">
+        <form name="register_new" action="home" onsubmit="return validateForm()" method="post">
+            <input type="text" placeholder="Имя" name="name"/>
+            <input type="password" placeholder="Пароль" name="password"/>
+            <br>
+            <input type="tel" placeholder="Телефон" name="phone">
+            <input type="text" placeholder="Город" name="city">
+            <br>
+            <input type="text" placeholder="Улица" name="street">
+            <input type="text" placeholder="Дом" name="house">
+            <br>
+            <br>
+            <button>Зарегистрировать</button>
+        </form>
+    </div>
+</div>
+<p>
+    <c:if test="${error} != null">${error}</c:if>
+</p>
+<br>
+<div>
+    <p>Найти имя пользователя по id</p>
+    <form name="find_by_id" action="home" onsubmit="return validateSecondForm()" method="post">
+        <input type="number" placeholder="Имя" name="name_to_find"/>
+        <input type="hidden" name="find" value="find">
+        <button>Найти</button>
+    </form>
+    <p>${finded_name}</p>
+</div>
+<br>
+<div>
+    <p>Пользователей в базе</p>
+    <form name="cnt" action="home" method="post">
+        <input type="hidden" name="count" value="count">
+        <button>Узнать количество пользователей в бд</button>
+    </form>
+    <p>${cnt_users}</p>
+</div>
+<script>function validateForm() {
+    var x = document.forms["register_new"]["name"].value;
+    if (x === "") {
+        alert("Не заполнено поле имени");
+        return false;
+    }
+    x = document.forms["register_new"]["password"].value;
+    if (x === "") {
+        alert("Не заполнено поле: пароль");
+        return false;
+    }
+    x = document.forms["register_new"]["phone"].value;
+    if (x === "") {
+        alert("Не заполнено поле: телефон");
+        return false;
+    }
+    x = document.forms["register_new"]["city"].value;
+    if (x === "") {
+        alert("Не заполнено поле: город");
+        return false;
+    }
+    x = document.forms["register_new"]["street"].value;
+    if (x === "") {
+        alert("Не заполнено поле: улица");
+        return false;
+    }
+    x = document.forms["register_new"]["house"].value;
+    if (x === "") {
+        alert("Не заполнено поле: номер дома");
+        return false;
+    }
+}
+</script>
 </body>
 </html>
