@@ -27,12 +27,12 @@ public class RegisterServlet extends AbstractUserServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType(TEXT_HTML_CHARSET_UTF_8);
 
-        boolean saved = userService.saveNew(req.getParameter("login"), req.getParameter("password"),
+        boolean saved = userService.saveNew(req.getParameter(LOGIN), req.getParameter("password"),
                 req.getParameter("phone"), req.getParameter("city"), req.getParameter("street"),
                 req.getParameter("house"));
 
         if (saved) {
-            req.getSession().setAttribute("user", req.getParameter("login"));
+            req.getSession().setAttribute("user", req.getParameter(LOGIN));
             resp.sendRedirect("home");
             resp.setStatus(200);
         }

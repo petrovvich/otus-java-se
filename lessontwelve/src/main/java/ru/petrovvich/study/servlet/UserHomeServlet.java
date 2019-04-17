@@ -30,23 +30,94 @@ public class UserHomeServlet extends AbstractUserServlet {
         HttpSession session = req.getSession(false);
         if (session == null) {
             resp.setStatus(401);
-            resp.sendRedirect("/login");
+            resp.sendRedirect(LOGIN_PAGE);
             return;
         }
 
-        String login = (String) session.getAttribute("login");
-        String error = (String) session.getAttribute("error");
-        String finded_name = (String) session.getAttribute("finded_name");
-        String cnt_users = (String) session.getAttribute("cnt_users");
+        String error = (String) session.getAttribute(ERROR);
+        String finded_name = (String) session.getAttribute(FINDED_NAME);
+        String cnt_users = (String) session.getAttribute(CNT_USERS);
 
-        parameters.put("error", error == null ? "" : error);
-        parameters.put("finded_name", finded_name == null ? "" : finded_name);
-        parameters.put("cnt_users", cnt_users == null ? "" : cnt_users);
+        parameters.put(ERROR, error == null ? "" : error);
+        parameters.put(FINDED_NAME, finded_name == null ? "" : finded_name);
+        parameters.put(CNT_USERS, cnt_users == null ? "" : cnt_users);
 
+        findUserAndRedirect(req, resp, parameters);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        resp.setContentType(TEXT_HTML_CHARSET_UTF_8);
+
+        HttpSession session = req.getSession(false);
+
+        String find = req.getParameter(FIND);
+
+        if (find != null && req.getParameter("name_to_find") != null) {
+            findById(req, resp, session);
+            return;
+        }
+
+        String count = req.getParameter(COUNT);
+
+        if (count != null) {
+            getCountUsers(resp, session);
+            return;
+        }
+
+        String login = req.getParameter(NAME);
+
+        if (userService.exist(login)) {
+            getErrorWhenUserExist(resp, session, login);
+            return;
+        }
+
+        saveNew(req, resp, session);
+    }
+
+    private void findById(HttpServletRequest req, HttpServletResponse resp, HttpSession session) throws IOException {
+        resp.setStatus(200);
+        resp.sendRedirect(HOME_PAGE);
+        UserDataSet user = userService.findById(Long.valueOf(req.getParameter("name_to_find")));
+        if (user != null) {
+            session.setAttribute(FINDED_NAME, "По данному id найден пользователь: " + user.getName());
+            return;
+        }
+        session.setAttribute(FINDED_NAME, "По данному id не найдено пользователей, уточните критерии поиска.");
+        return;
+    }
+
+    private void saveNew(HttpServletRequest req, HttpServletResponse resp, HttpSession session) throws IOException {
+        boolean saved = userService.saveNew(req.getParameter(NAME), req.getParameter("password")
+                , req.getParameter("phone"), req.getParameter("city"), req.getParameter("street")
+                , req.getParameter("house"));
+        if (saved) {
+            resp.setStatus(200);
+            resp.sendRedirect(HOME_PAGE);
+            session.setAttribute(ERROR, "");
+        }
+    }
+
+    private void getErrorWhenUserExist(HttpServletResponse resp, HttpSession session, String login) throws IOException {
+        logger.warn("User is exist, return error. User login is {}", login);
+        session.setAttribute(ERROR, "Пользователь с таким логином уже существует в системе");
+        resp.sendRedirect(HOME_PAGE);
+        resp.setStatus(200);
+    }
+
+    private void getCountUsers(HttpServletResponse resp, HttpSession session) throws IOException {
+        resp.setStatus(200);
+        resp.sendRedirect(HOME_PAGE);
+        session.setAttribute(CNT_USERS, "Количество пользователей в базе: " + userService.getCountUsers());
+    }
+
+    private void findUserAndRedirect(HttpServletRequest request, HttpServletResponse response, Map<String, Object> parameters) throws IOException {
+        HttpSession session = request.getSession(false);
+        String login = (String) session.getAttribute(LOGIN);
         UserDataSet userDataSet = userService.findByName(login);
         if (userDataSet == null) {
-            resp.setStatus(401);
-            resp.sendRedirect(req.getContextPath() + "/login");
+            response.setStatus(401);
+            response.sendRedirect(request.getContextPath() + LOGIN_PAGE);
             return;
         }
 
@@ -56,60 +127,10 @@ public class UserHomeServlet extends AbstractUserServlet {
         }
         String addressString = address.getCity() + " " + address.getStreet() + " " + address.getHouseNumber();
 
-        parameters.put("login", userDataSet.getName());
+        parameters.put(LOGIN, userDataSet.getName());
         parameters.put("phone", userDataSet.getPhone() == null ? "не указано" : userDataSet.getPhone().getNumber());
         parameters.put("address", addressString);
-        resp.getWriter().println(templateProcessor.getPage("home.html", parameters));
-        resp.setStatus(200);
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        resp.setContentType(TEXT_HTML_CHARSET_UTF_8);
-
-        HttpSession session = req.getSession(false);
-
-        String find = req.getParameter("find");
-
-        if (find != null && req.getParameter("name_to_find") != null) {
-            resp.setStatus(200);
-            resp.sendRedirect("/home");
-            UserDataSet user = userService.findById(Long.valueOf(req.getParameter("name_to_find")));
-            if (user != null) {
-                session.setAttribute("finded_name", "По данному id найден пользователь: " + user.getName());
-                return;
-            }
-            session.setAttribute("finded_name", "По данному id не найдено пользователей, уточните критерии поиска.");
-
-            return;
-        }
-
-        String count = req.getParameter("count");
-
-        if (count != null) {
-            resp.setStatus(200);
-            resp.sendRedirect("/home");
-            session.setAttribute("cnt_users", "Количество пользователей в базе: " + userService.getCountUsers());
-            return;
-        }
-
-        String login = req.getParameter("name");
-
-        if (userService.exist(login)) {
-            logger.warn("User is exist, return error. User login is {}", login);
-            session.setAttribute("error", "Пользователь с таким логином уже существует в системе");
-            resp.sendRedirect("/home");
-            resp.setStatus(200);
-            return;
-        }
-
-        boolean saved = userService.saveNew(req.getParameter("name"), req.getParameter("password")
-                , req.getParameter("phone"), req.getParameter("city"), req.getParameter("street")
-                , req.getParameter("house"));
-        if (saved) {
-            resp.setStatus(200);
-            resp.sendRedirect("/home");
-            session.setAttribute("error", "");
-        }
+        response.getWriter().println(templateProcessor.getPage("home.html", parameters));
+        response.setStatus(200);
     }
 }

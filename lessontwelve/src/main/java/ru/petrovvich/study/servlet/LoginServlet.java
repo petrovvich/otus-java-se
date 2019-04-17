@@ -28,7 +28,7 @@ public class LoginServlet extends AbstractUserServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String name = req.getParameter("login");
+        String name = req.getParameter(LOGIN);
         String password = req.getParameter("password");
 
         UserDataSet existUser = userService.findByName(name);
@@ -36,13 +36,13 @@ public class LoginServlet extends AbstractUserServlet {
         resp.setContentType(TEXT_HTML_CHARSET_UTF_8);
         resp.setStatus(200);
         if (existUser == null) {
-            resp.sendRedirect(req.getContextPath() + "/register");
+            resp.sendRedirect(req.getContextPath() + REGISTER_PAGE);
         } else if (!existUser.getPassword().equals(password)) {
             //??? TO DO
         } else {
             HttpSession session = req.getSession();
-            session.setAttribute("login", name);
-            resp.sendRedirect(req.getContextPath() + "/home");
+            session.setAttribute(LOGIN, name);
+            resp.sendRedirect(req.getContextPath() + HOME_PAGE);
         }
     }
 }
