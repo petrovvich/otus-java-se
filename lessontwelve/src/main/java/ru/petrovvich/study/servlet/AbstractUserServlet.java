@@ -12,8 +12,8 @@ public abstract class AbstractUserServlet extends HttpServlet {
     final TemplateProcessor templateProcessor;
     final UserService userService;
 
-    AbstractUserServlet() {
-        this.templateProcessor = new TemplateProcessor();
-        this.userService = new UserService();
+    AbstractUserServlet(TemplateProcessor templateProcessor, UserService userService) {
+        this.templateProcessor = templateProcessor;
+        this.userService = userService;
     }
 }

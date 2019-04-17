@@ -2,6 +2,8 @@ package ru.petrovvich.study.servlet;
 
 
 import ru.petrovvich.study.model.UserDataSet;
+import ru.petrovvich.study.processor.TemplateProcessor;
+import ru.petrovvich.study.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,8 +14,8 @@ import java.util.Map;
 
 public class LoginServlet extends AbstractUserServlet {
 
-    public LoginServlet() {
-        super();
+    public LoginServlet(TemplateProcessor templateProcessor, UserService userService) {
+        super(templateProcessor, userService);
     }
 
     @Override

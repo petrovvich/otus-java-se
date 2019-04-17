@@ -1,41 +1,18 @@
 package ru.petrovvich.study.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import ru.petrovvich.study.model.AddressDataSet;
-import ru.petrovvich.study.model.PhoneDataSet;
 import ru.petrovvich.study.model.UserDataSet;
 
-public class UserService {
+public interface UserService {
 
-    private DBServiceHibernateImpl dbService = new DBServiceHibernateImpl();
-    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+    UserDataSet findByNameAndPassword(String name, String password);
 
-    public UserDataSet findByNameAndPassword(String name, String password) {
-        return dbService.readByNameAndPassword(name, password);
-    }
+    UserDataSet findByName(String name);
 
-    public UserDataSet findByName(String name) {
-        return dbService.readByName(name);
-    }
+    UserDataSet findById(Long id);
 
-    public UserDataSet findById(Long id) {
-        return dbService.read(id);
-    }
+    Integer getCountUsers();
 
-    public Integer getCount() {
-        return dbService.readAll().size();
-    }
+    boolean saveNew(String name, String password, String phone, String city, String street, String house);
 
-    public boolean saveNew(String name, String password, String phone, String city, String street, String house) {
-
-        logger.info("Saving new user {}, {], {}, {}, {}", name, phone, city, street, house);
-        dbService.save(new UserDataSet(name, password, new PhoneDataSet(phone), new AddressDataSet(city, street, house)));
-
-        return findByName(name) != null;
-    }
-
-    public boolean exist(String login) {
-        return findByName(login) != null;
-    }
+    boolean exist(String login);
 }

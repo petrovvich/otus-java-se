@@ -1,7 +1,7 @@
 package ru.petrovvich.study.example;
 
 import ru.petrovvich.study.processor.TemplateProcessor;
-import ru.petrovvich.study.service.UserService;
+import ru.petrovvich.study.service.UserServiceImpl;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -21,7 +21,7 @@ public class TimerServlet extends HttpServlet {
     private static final String TIMER_PAGE_TEMPLATE = "timer.html";
     private static final int PERIOD_MS = 1000;
 
-    private final UserService userService = new UserService();
+    private final UserServiceImpl userService = new UserServiceImpl();
 
     private final TemplateProcessor templateProcessor;
 

@@ -1,8 +1,7 @@
 package ru.petrovvich.study.servlet;
 
-import ru.petrovvich.study.model.AddressDataSet;
-import ru.petrovvich.study.model.PhoneDataSet;
-import ru.petrovvich.study.model.UserDataSet;
+import ru.petrovvich.study.processor.TemplateProcessor;
+import ru.petrovvich.study.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,8 +11,8 @@ import java.util.Map;
 
 public class RegisterServlet extends AbstractUserServlet {
 
-    public RegisterServlet() {
-        super();
+    public RegisterServlet(TemplateProcessor templateProcessor, UserService userService) {
+        super(templateProcessor, userService);
     }
 
     @Override

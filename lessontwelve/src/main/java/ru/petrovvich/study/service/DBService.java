@@ -16,4 +16,6 @@ public interface DBService {
     List<UserDataSet> readAll();
 
     void shutdown();
+
+    UserDataSet readByNameAndPassword(String name, String password);
 }

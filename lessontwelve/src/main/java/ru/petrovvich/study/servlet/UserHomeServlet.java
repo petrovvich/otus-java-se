@@ -4,6 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.petrovvich.study.model.AddressDataSet;
 import ru.petrovvich.study.model.UserDataSet;
+import ru.petrovvich.study.processor.TemplateProcessor;
+import ru.petrovvich.study.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,8 +18,8 @@ public class UserHomeServlet extends AbstractUserServlet {
 
     private static final Logger logger = LoggerFactory.getLogger(UserHomeServlet.class);
 
-    public UserHomeServlet() {
-        super();
+    public UserHomeServlet(TemplateProcessor templateProcessor, UserService userService) {
+        super(templateProcessor, userService);
     }
 
     @Override
@@ -41,7 +43,7 @@ public class UserHomeServlet extends AbstractUserServlet {
         parameters.put("finded_name", finded_name == null ? "" : finded_name);
         parameters.put("cnt_users", cnt_users == null ? "" : cnt_users);
 
-       UserDataSet userDataSet = userService.findByName(login);
+        UserDataSet userDataSet = userService.findByName(login);
         if (userDataSet == null) {
             resp.setStatus(401);
             resp.sendRedirect(req.getContextPath() + "/login");
@@ -87,7 +89,7 @@ public class UserHomeServlet extends AbstractUserServlet {
         if (count != null) {
             resp.setStatus(200);
             resp.sendRedirect("/home");
-            session.setAttribute("cnt_users", "Количество пользователей в базе: " + userService.getCount());
+            session.setAttribute("cnt_users", "Количество пользователей в базе: " + userService.getCountUsers());
             return;
         }
 
