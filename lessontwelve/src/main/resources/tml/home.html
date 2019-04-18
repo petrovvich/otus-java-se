@@ -6,14 +6,6 @@
 </head>
 <body>
 <a href="login">Назад</a>
-<h1>Информация о текущем пользователе</h1>
-<div>${login}</div>
-<br>
-<div>${phone}</div>
-<br>
-<div>Полный адрес: ${address}</div>
-<br>
-<br>
 <div class="login-page">
     <p>Добавить нового пользователя</p>
     <div class="form">
@@ -38,9 +30,8 @@
 <br>
 <div>
     <p>Найти имя пользователя по id</p>
-    <form name="find_by_id" action="home" onsubmit="return validateSecondForm()" method="post">
+    <form name="find_by_id" action="home" onsubmit="return validateSecondForm()" method="get">
         <input type="number" placeholder="Имя" name="name_to_find"/>
-        <input type="hidden" name="find" value="find">
         <button>Найти</button>
     </form>
     <p>${finded_name}</p>
@@ -48,7 +39,7 @@
 <br>
 <div>
     <p>Пользователей в базе</p>
-    <form name="cnt" action="home" method="post">
+    <form name="cnt" action="home" method="get">
         <input type="hidden" name="count" value="count">
         <button>Узнать количество пользователей в бд</button>
     </form>
