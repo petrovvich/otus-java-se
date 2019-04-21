@@ -1,34 +1,48 @@
 package ru.petrovvich.study.servlet;
 
 
-import ru.petrovvich.study.example.TemplateProcessor;
+import ru.petrovvich.study.model.UserDataSet;
+import ru.petrovvich.study.processor.TemplateProcessor;
+import ru.petrovvich.study.service.UserService;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LoginServlet extends HttpServlet {
+public class LoginServlet extends AbstractUserServlet {
 
-    private final TemplateProcessor templateProcessor;
-
-    public LoginServlet() {
-        this.templateProcessor = new TemplateProcessor();
+    public LoginServlet(TemplateProcessor templateProcessor, UserService userService) {
+        super(templateProcessor, userService);
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Map<String, Object> parameters = new HashMap<>();
-        resp.setContentType("text/html;charset=utf-8");
+        resp.setContentType(TEXT_HTML_CHARSET_UTF_8);
         resp.getWriter().println(templateProcessor.getPage("login.html", parameters));
-        resp.setStatus(HttpServletResponse.SC_OK);
+        resp.setStatus(200);
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPost(req, resp);
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String name = req.getParameter(LOGIN);
+        String password = req.getParameter("password");
+
+        UserDataSet existUser = userService.findByName(name);
+
+        resp.setContentType(TEXT_HTML_CHARSET_UTF_8);
+        resp.setStatus(200);
+        if (existUser == null) {
+            resp.sendRedirect(req.getContextPath() + REGISTER_PAGE);
+        } else if (!existUser.getPassword().equals(password)) {
+            //??? TO DO
+        } else {
+            HttpSession session = req.getSession();
+            session.setAttribute(LOGIN, name);
+            resp.sendRedirect(req.getContextPath() + HOME_PAGE);
+        }
     }
 }

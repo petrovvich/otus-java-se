@@ -1,4 +1,4 @@
-package ru.petrovvich.study.example;
+package ru.petrovvich.study.processor;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -14,9 +14,8 @@ public class TemplateProcessor {
 
     private Configuration configuration;
 
-    public TemplateProcessor() {
-
-        configuration = new Configuration(Configuration.VERSION_2_3_28);
+    public TemplateProcessor(Configuration configuration) {
+        this.configuration = configuration;
         configuration.setClassForTemplateLoading(this.getClass(), HTML_DIR);
         configuration.setDefaultEncoding("UTF-8");
     }
