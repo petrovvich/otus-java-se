@@ -12,47 +12,8 @@ import java.util.stream.IntStream;
 public class SortingService {
 
     private static Logger log = LoggerFactory.getLogger(SortingService.class);
-    private int size;
-    private int numberOfThreads;
-    private int numberOfRepeating;
 
-    private static int[] result;
-    private static long sortingTimeMs = 0;
-
-    SortingService(int size, int numOfThreads, int numberOfRepeating) {
-        this.size = size;
-        this.numberOfThreads = numOfThreads;
-        this.numberOfRepeating = numberOfRepeating;
-    }
-
-    void sort() throws InterruptedException {
-        log.info("Start sorting {} ints", size);
-
-        int[] data = createArray(size);
-
-        for (int i = 1; i <= numberOfThreads; i++) {
-            for (int k = 0; k < numberOfRepeating; k++) {
-                Thread worker = new Thread(() -> {
-                    try {
-                        long t1 = System.currentTimeMillis();
-                        result = sortInThreadsSync(data, numberOfThreads);
-                        long t2 = System.currentTimeMillis();
-                        sortingTimeMs += t2 - t1;
-                    } catch (Exception e) {
-                        log.error("Sorting error ", e);
-                    }
-                });
-                worker.start();
-                worker.join();
-            }
-            sortingTimeMs = sortingTimeMs / numberOfRepeating;
-            log.trace("T[{}] - {} ms", numberOfThreads, sortingTimeMs);
-
-            result = null;
-            System.gc();
-            Thread.sleep(10);
-        }
-        log.info("Finish sorting {} ints", size);
+    SortingService() {
     }
 
     int[] sortInThreadsSync(int[] data, int numberOfThreads) throws Exception {
@@ -126,12 +87,6 @@ public class SortingService {
             }
         }
         return out;
-    }
-
-    private static int[] createArray(int size) {
-        Random rnd = new Random();
-        IntStream is = rnd.ints(size);
-        return is.toArray();
     }
 
     static class SortingTask implements Runnable {
